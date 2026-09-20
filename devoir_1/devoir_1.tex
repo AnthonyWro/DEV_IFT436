@@ -1,0 +1,497 @@
+\documentclass[11pt]{article}
+
+\usepackage[french]{babel}
+
+\usepackage[T1]{fontenc}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage[shortlabels]{enumitem}
+
+\usepackage[margin=2cm]{geometry}
+
+\usepackage{mathtools}
+\usepackage{siunitx}
+\usepackage{physics}
+
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usetikzlibrary{quantikz2,babel}
+
+\tikzset{qcircuit/.style={
+    column sep=.9cm,
+    row sep=0.7cm,
+    operator/.style={draw=black!80, line width=0.5pt, fill=gray!5, minimum height=0.7cm, minimum width=0.7cm},
+    phase/.style={draw=black!80, fill=black!20, circle, minimum size=4pt},
+    slice/.style={font=\footnotesize\itshape, color=gray!50, dashed}
+}}
+
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+
+\makeatletter
+   \def\vhrulefill#1{\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
+\makeatother
+
+\newcommand{\moy}[1]{\langle #1 \rangle}
+\newcommand{\pDer}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pDerd}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+
+\newcounter{questioncounter}
+\newenvironment{question}[1]{
+\refstepcounter{questioncounter}
+\noindent\rule{0.05\textwidth}{1pt}\,\,\raisebox{-.3\ht\strutbox}{\textbf{Question \thequestioncounter \hspace{5mm} #1}}\,\,\vhrulefill{1pt}\par\vspace{0.4cm}
+}{\par}
+
+%======================================================
+%en-tete
+%======================================================
+\begin{document}
+\selectlanguage{french}
+\noindent{\Large Anthony Wroblewski} \hfill {\Large \today}\\
+%{\Large Anthony Wroblewski}
+
+\par\vspace{5mm}
+\begin{center}
+   {\Large IFT436 - Algorithmes et structures de données} \\ \vspace{5mm}
+   {\LARGE\sffamily Devoir \#1} \\ \vspace{5mm}
+\end{center}
+
+%======================================================
+%question 1
+%======================================================
+\begin{question}{Une question d’échauﬀement}
+
+
+On pourrait résoudre le problème en triant d'abord le tableau à l'aide du tri-fusion, puis en retournant la $k$-ième plus petite valeur ainsi que son indice original. Il faudrait donc parcourir le tableau original une premiere fois pour crée un nouveau tableau $A$ contenant des paires $(T[i],i)$, où la première composante correspond à la valeur et la seconde à son indice original dans $T$. On appliquer ensuite le tri-fusion en utilisant la premiere composante de chaque paires.\\ 
+
+Comme le tri-fusion s'exécute en temps $O(n\log n)$ et que parcourir le tableau initial s'exécute en $O(n)$, cette approche permet de résoudre le problème en temps $O(n + n\log n) \approx O(n\log n)$.\\
+
+Il serais peut-être possible de faire mieux en utilisant une méthode inspirée de Quicksort. Au lieu de trier complètement le tableau, on effectue seulement les partitions nécessaires pour trouver la $k$-ième plus petite valeur. Dependament des pivots, au pire on aurais quelque chose comme $O(n^2)$, mais au mieux $O(n)$.\\
+
+\end{question}
+
+
+%======================================================
+%question 2
+%======================================================
+\begin{question}{Le problème de la sous-somme}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item Non, cet algorithme ne résout pas correctement le problème de la sous-somme.
+
+Considérons le contre-exemple
+
+$$
+S=\{1,2,3,4,5\}
+\qquad\text{et}\qquad
+t=10.
+$$
+
+Il existe une solution au problème, par exemple
+
+$$
+S'=\{1,4,5\},
+$$
+
+puisque
+
+$$
+1+4+5=10.
+$$
+
+Cependant, l'algorithme choisit toujours le plus grand élément restant dans \(S\). Il choisit donc successivement \(5\), \(4\), puis \(3\). La valeur de \(q\) évolue ainsi :
+
+$$
+q=5,\qquad q=5+4=9,\qquad q=5+4+3=12.
+$$
+
+Puisque \(q\geq t\), la boucle se termine. Comme
+
+$$
+q=12\neq 10,
+$$
+
+l'algorithme retourne \texttt{null}, alors qu'une solution existe.
+
+l'algorithme ne résout donc pas correctement le problème de la sous-somme.
+
+\item \textbf{(1)} Oui, cet algorithme résout correctement le problème de la sous-somme.
+
+L'algorithme examine tous les sous-ensembles \(S' \subseteq S\). Si un sous-ensemble dont la somme vaut \(t\) existe, il sera nécessairement examiné par l'algorithme, qui le retournera. Si aucun sous-ensemble possède une somme égale à \(t\), alors l'algorithme aura examiné tous les sous-ensembles sans trouver de solution et retournera \texttt{null}. L'algorithme est donc correct.
+
+\bigskip
+
+\textbf{(2)} Dans le pire cas, l'algorithme entre dans la boucle une fois pour chacun des sous-ensembles de \(S\).
+
+Pour chacun des \(n\) éléments de \(S\), il existe deux possibilités lors de la construction d'un sous-ensemble : l'élément appartient au sous-ensemble ou il n'y appartient pas. 
+$$
+\underbrace{2\times2\times2\times ... \times 2}_{n\times\text{fois}} = 2^n
+$$
+Le nombre total de sous-ensembles est donc
+
+$$
+2^n.
+$$
+
+De manière équivalente,
+
+$$
+\sum_{k=0}^{n} \binom{n}{k} = 2^n.
+$$
+
+Ainsi, dans le pire cas, l'algorithme entre dans la boucle \textbf{pour chaque} $2^n$ fois.\\
+
+\item \textbf{(1)} L'algorithme énumère seulement les sous-ensembles de \(S\) contenant exactement \(k\) éléments.
+
+Le nombre de façons de choisir \(k\) éléments parmi les \(n=|S|\) éléments de \(S\) est donné par le coefficient binomial
+
+$$
+\binom{n}{k}
+=
+\frac{n!}{k!(n-k)!}.
+$$
+
+Dans le pire cas, l'algorithme entre dans la boucle
+
+$$
+\boxed{\binom{n}{k}}
+$$
+
+fois.
+
+\bigskip
+
+\textbf{(2)} En géneral cette valeur est plus petite que \(2^n\), pour \(n>0\) pour $k \in \{1,2,...,\abs{S}-1\}$.
+
+On sait que
+
+$$
+2^n
+=
+\sum_{i=0}^{n}\binom{n}{i}.
+$$
+
+Le terme \(\binom{n}{k}\) ne compte que les sous-ensembles de taille exactement \(k\), tandis que \(2^n\) compte tous les sous-ensembles possibles de \(S\).
+
+Par conséquent,
+
+$$
+\boxed{\binom{n}{k} < 2^n}
+$$
+
+pour \(n>0\) et $k<n$.\\ 
+
+Or si $k=n$ alors $\binom{n}{k}=2^n$ dans ce cas, la valeur est la même. Puisqu'on considère le pire cas, les deux algorithme respect $O(2^n)$.\\ 
+
+
+Détail de notation : Je note \(\binom{n}{k}\), ou \(k\) parmi \(n\) est noter avec \(n\) en haut et \(k\) en bas. Je mentionne puisque je sais que certain font l'inverse. 
+
+\end{enumerate}
+
+
+
+\end{question}
+%======================================================
+%question 3
+%======================================================
+\begin{question}{Puissances en temps logarithmique}
+    \begin{enumerate}[label=(\alph*)]
+
+\item On veut démontrer que, pour tout entier \(k \geq 0\), l'algorithme $\texttt{pow(x,k)}$ retourne bien \(x^k\).
+
+On procéde par induction sur \(k\).\\
+
+\textbf{Cas de base.}\\
+
+Si \(k=0\), l'algorithme retourne \(1\). Et, $x^0=1.$\\
+
+Si \(k=1\), l'algorithme retourne \(x\). Et, $x^1=x.$\\
+
+Donc l'algorithme est correct pour \(k=0\) et \(k=1\).
+
+\bigskip
+
+\textbf{Hypothèse d'induction.}
+
+Supposons maintenant que, pour tout entier \(j<k\), l'appel
+
+$$
+\texttt{pow}(x,j)
+$$
+
+retourne correctement \(x^j\).
+
+Considérons un entier \(k\geq 2\). L'algorithme calcule
+
+$$
+\texttt{tmp}=\texttt{pow}\left(x,\left\lfloor\frac{k}{2}\right\rfloor\right).
+$$
+
+Comme
+
+$$
+\left\lfloor\frac{k}{2}\right\rfloor < k,
+$$
+
+l'hypothèse d'induction implique que
+
+$$
+\texttt{tmp}
+=
+x^{\left\lfloor k/2 \right\rfloor}.
+$$
+
+Il reste alors à considérer deux cas.
+
+\textbf{Cas 1 : \(k\) est pair.}
+
+Il existe un entier \(m\) tel que
+
+$$
+k=2m.
+$$
+
+Dans ce cas,
+
+$$
+\left\lfloor\frac{k}{2}\right\rfloor=m,
+$$
+
+donc
+
+$$
+\texttt{tmp}=x^m.
+$$
+
+L'algorithme retourne
+
+$$
+\texttt{tmp}\cdot\texttt{tmp}
+=
+x^m x^m
+=
+x^{2m}
+=
+x^k.
+$$
+
+\textbf{Cas 2 : \(k\) est impair.}
+
+Il existe un entier \(m\) tel que
+
+$$
+k=2m+1.
+$$
+
+Dans ce cas,
+
+$$
+\left\lfloor\frac{k}{2}\right\rfloor=m,
+$$
+
+donc
+
+$$
+\texttt{tmp}=x^m.
+$$
+
+L'algorithme retourne alors
+
+$$
+\texttt{tmp}\cdot\texttt{tmp}\cdot x
+=
+x^m x^m x
+=
+x^{2m+1}
+=
+x^k.
+$$
+
+Dans les deux cas, l'algorithme retourne correctement \(x^k\).
+
+Par induction, l'algorithme \texttt{pow(x,k)} calcule correctement \(x^k\) pour tout \(k\geq 0\).\\
+
+
+\item  Soit \(r(k)\) le nombre total d'appels à la fonction \texttt{pow}, en comptant l'appel initial.
+
+Lorsque \(k=1\), la fonction retourne directement \(x\), donc
+
+$$
+r(1)=1.
+$$
+
+Lorsque \(k>1\), la fonction effectue exactement un appel récursif avec l'argument
+\(\lfloor k/2 \rfloor\). Puisque nous supposons que \(k\) est une puissance de \(2\), \(k\) est pair et nous avons\\
+
+\begin{equation*} 
+\left\lfloor \frac{k}{2} \right\rfloor=\frac{k}{2}. \quad et \quad r(k)=1+r\left(\frac{k}{2}\right).
+\end{equation*}
+
+Nous voulons démontrer que, pour toute puissance de \(2\),
+
+$$
+r(k)=\log_2(k)+1.
+$$ 
+avec $k=2^m$, et \(m\geq 0\).
+
+Nous procédons par induction sur \(m\).
+
+\textbf{Cas de base : \(m=0\).}
+
+On a
+
+$$
+k=2^0=1.
+$$
+
+Alors
+
+$$
+r(1)=1.
+$$
+
+Et
+
+$$
+\log_2(1)+1=0+1=1.
+$$
+
+La propriété est donc vraie pour \(m=0\).
+
+\bigskip
+
+\textbf{Hypothèse d'induction.}
+
+Supposons que, pour un certain \(m \geq 0\),
+
+$$
+r(2^m)=m+1.
+$$
+
+\textbf{Étape d'induction.}
+
+Considérons la puissance de \(2\) suivante, soit
+
+$$
+k=2^{m+1}.
+$$
+
+Pour \(k>1\), l'appel courant à \texttt{pow(x,k)} compte pour un appel et la fonction effectue ensuite un appel récursif avec \(k/2\). Par définition de \(r\), on a donc
+
+$$
+r(k)=1+r\left(\frac{k}{2}\right).
+$$
+
+En remplaçant \(k\) par \(2^{m+1}\), on obtient
+
+$$
+r(2^{m+1})
+=
+1+r\left(\frac{2^{m+1}}{2}\right).
+$$
+
+$$
+r(2^{m+1})
+=
+1+r(2^m).
+$$
+
+En utilisant l'hypothèse d'induction \(r(2^m)=m+1\),
+
+$$
+r(2^{m+1})
+=
+1+(m+1)
+=
+m+2.
+$$
+
+Finalement,
+
+$$
+m+2
+=
+\log_2(2^{m+1})+1.
+$$
+
+% Ainsi,
+
+% $$
+% r(2^{m+1})
+% =
+% \log_2(2^{m+1})+1.
+% $$
+
+
+% Par l'hypothèse d'induction,
+
+% $$
+% r(2^{m+1})
+% =
+% 1+(m+1)
+% =
+% m+2.
+% $$
+
+% Or,
+
+% $$
+% \log_2(2^{m+1})+1
+% =
+% m+1+1
+% =
+% m+2.
+% $$
+
+On peut Remplacer,
+
+$$
+r(2^{m+1})
+=
+\log_2(2^{m+1})+1.
+$$
+
+Par induction, pour toute puissance de \(2\),
+
+$$
+\boxed{r(k)=\log_2(k)+1}.
+$$
+
+\end{enumerate}
+    
+\end{question}
+
+
+$$d\vec E = \frac{1}{4\pi\varepsilon_0} \frac{\rho\,dV\,(\vec r-\vec r\,')}{|\vec r-\vec r\,'|^3},$$
+Donc
+
+$$d\vec E = -\frac{\rho}{4\pi\varepsilon_0} \frac{\vec r\,'}{|\vec r\,'|^3}\,dV.$$
+
+En cylindriques,
+
+$\vec r\,'=r\hat r+z\hat z,$
+
+et
+
+$$|\vec r\,'|=\sqrt{r^2+z^2}.$$
+
+De plus,
+
+\bibliographystyle{apsrev4-2}
+\bibliography{references}
+\end{document}
