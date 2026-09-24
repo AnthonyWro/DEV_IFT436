@@ -1,0 +1,104 @@
+\documentclass[11pt]{article}
+
+\usepackage[french]{babel}
+
+\usepackage[T1]{fontenc}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage[shortlabels]{enumitem}
+
+\usepackage[margin=2cm]{geometry}
+
+\usepackage{mathtools}
+\usepackage{siunitx}
+\usepackage{physics}
+
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usetikzlibrary{quantikz2,babel}
+
+\tikzset{qcircuit/.style={
+    column sep=.9cm,
+    row sep=0.7cm,
+    operator/.style={draw=black!80, line width=0.5pt, fill=gray!5, minimum height=0.7cm, minimum width=0.7cm},
+    phase/.style={draw=black!80, fill=black!20, circle, minimum size=4pt},
+    slice/.style={font=\footnotesize\itshape, color=gray!50, dashed}
+}}
+
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+
+\makeatletter
+   \def\vhrulefill#1{\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
+\makeatother
+
+\newcommand{\moy}[1]{\langle #1 \rangle}
+\newcommand{\pDer}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pDerd}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+
+\newcounter{questioncounter}
+\newenvironment{question}[1]{
+\refstepcounter{questioncounter}
+\noindent\rule{0.05\textwidth}{1pt}\,\,\raisebox{-.3\ht\strutbox}{\textbf{Question \thequestioncounter \hspace{5mm} #1}}\,\,\vhrulefill{1pt}\par\vspace{0.4cm}
+}{\par}
+
+%======================================================
+%en-tete
+%======================================================
+\begin{document}
+\selectlanguage{french}
+\noindent{\Large Anthony Wroblewski} \hfill {\Large \today}\\
+%{\Large Anthony Wroblewski}
+
+\par\vspace{5mm}
+\begin{center}
+   {\Large IFT436 - Algorithmes et structures de données} \\ \vspace{5mm}
+   {\LARGE\sffamily Devoir \#2} \\ \vspace{5mm}
+\end{center}
+
+%======================================================
+%question 1
+%======================================================
+\begin{question}{Une question d’échauﬀement}
+
+    
+\end{question}
+
+
+%======================================================
+%question 2
+%======================================================
+\begin{question}{Le problème de la sous-somme}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item 
+\end{enumerate}
+\end{question}
+%======================================================
+%question 3
+%======================================================
+\begin{question}{Puissances en temps logarithmique}
+    \begin{enumerate}[label=(\alph*)]
+\item  
+\end{enumerate}
+\end{question}
+
+
+\bibliographystyle{apsrev4-2}
+\bibliography{references}
+\end{document}
