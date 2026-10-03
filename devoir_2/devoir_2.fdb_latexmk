@@ -1,5 +1,5 @@
 # Fdb version 4
-["bibtex devoir_2"] 0 "devoir_2.aux" "devoir_2.bbl" "devoir_2" 1790993310.07701 0
+["bibtex devoir_2"] 0 "devoir_2.aux" "devoir_2.bbl" "devoir_2" 1790993489.54416 0
   "c:/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1790003093 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
   "devoir_2.aux" 0 -1 0 "pdflatex"
   "references.bib" 0 -1 0 ""
@@ -7,8 +7,8 @@
   "devoir_2.bbl"
   "devoir_2.blg"
   (rewritten before read)
-["pdflatex"] 1790993308.26917 "c:/Users/antho/IFT-436/Devoir/DEV_IFT436/devoir_2/devoir_2.tex" "devoir_2.pdf" "devoir_2" 1790993310.07743 0
-  "c:/Users/antho/IFT-436/Devoir/DEV_IFT436/devoir_2/devoir_2.tex" 1790993307 13472 4b4aaa6b62219004e260685961e3d74b ""
+["pdflatex"] 1790993487.80287 "c:/Users/antho/IFT-436/Devoir/DEV_IFT436/devoir_2/devoir_2.tex" "devoir_2.pdf" "devoir_2" 1790993489.54458 0
+  "c:/Users/antho/IFT-436/Devoir/DEV_IFT436/devoir_2/devoir_2.tex" 1790993487 13458 2da5a2055da2fd01392a77fb5723ed2b ""
   "c:/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1789999524 2971 def0b6c1f0b107b3b936def894055589 ""
   "c:/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1790000329 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/ecbx1095.tfm" 1789999980 3584 21b378cca2e40816b0e6d74a4dc98f04 ""
@@ -232,10 +232,10 @@
   "c:/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1790004470 5655996 795b756740562267ad2ae16e70168a76 ""
   "c:/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1790004627 3658242 bf4f89cecbe25c30a091aa7a8a260270 ""
   "c:/texlive/2026/texmf.cnf" 1790004453 713 e69b156964470283e0530f5060668171 ""
-  "devoir_2.aux" 1790993309 422 a284a15ba3f726d826f6f084a2db8e4a "pdflatex"
+  "devoir_2.aux" 1790993488 422 a284a15ba3f726d826f6f084a2db8e4a "pdflatex"
   "devoir_2.bbl" 0 -1 0 "bibtex devoir_2"
-  "devoir_2.out" 1790993309 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "devoir_2.tex" 1790993307 13472 4b4aaa6b62219004e260685961e3d74b ""
+  "devoir_2.out" 1790993488 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "devoir_2.tex" 1790993487 13458 2da5a2055da2fd01392a77fb5723ed2b ""
   (generated)
   "devoir_2.aux"
   "devoir_2.log"
