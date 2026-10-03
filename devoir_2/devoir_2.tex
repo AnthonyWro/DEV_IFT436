@@ -69,7 +69,7 @@
 %======================================================
 \begin{document}
 \selectlanguage{french}
-\noindent{\Large Anthony Dubeau: Duba } \hfill {\Large \today}\\
+\noindent{\Large Anthony Dubeau: Duba0207 } \hfill {\Large \today}\\
 {\Large Anthony Wroblewski: Wroa8915}
 
 \par\vspace{5mm}
@@ -90,7 +90,7 @@
         \item Oui
         \item Non
 \end{enumerate}
-\item \subsection*{\romannum{2}}
+\item \subsection*{\romannum{1}}
 \[
 f(n)=n^4+20n^2
 \]
@@ -250,7 +250,7 @@ f(n) = n! = n(n-1)(n-2)\cdots 2\cdot1
 g(n) = (2n)! = (2n)(2n-1)(2n-2)\cdots(n+1)n(n-1)\cdots2\cdot1
 \]
 
-On reconnaît alors le terme $n!$ :
+On reconnaît alors les facteurs de $n!$ :
 
 \[
 (2n)!
@@ -331,9 +331,9 @@ Pour $n\geq1$, comme le terme dominant est $\frac{1}{2}n^2$,
 Ainsi,
 
 \[
-\boxed{t(n)\in O(n^2)}
+\boxed{t(n)\in O(n^2),\; avec \; c = 1}
 \qquad\text{et}\qquad
-\boxed{t(n)\in\Omega(n^2)} \implies \boxed{t(n)\in\Theta(n^2)}. 
+\boxed{t(n)\in\Omega(n^2),\; avec \; c = \frac{1}{2}} \implies \boxed{t(n)\in\Theta(n^2)}. 
 \]
 
  On rappel que les opérations d'ajout et de suppression étant en $O(1)$ avec la table de hashage, elles ne changent pas la complexité totale.
@@ -366,7 +366,7 @@ Donc la complexité en temps de l'algorithme naïf est
 
 On suppose que $|P|=|I|=n $ et que tous les intervalles sont positifs.\\
 
-L'idée serais de dabords trier les points et les intervalles selon leur position. Pour chaque point $p$, on considère tous les intervalles dont la borne gauche $a$ est inférieure ou égale à $p$. Parmi ces intervalles, il suffit de conserver celui dont la borne droite $b$ est la plus grande. En effet, si ce plus grand $b$ est inférieur à $p$, aucun des intervalles considérés ne peut contenir $p$. À l'inverse, si $\text{max}_b\geq p$, alors
+L'idée serais de d'abord trier les points et les intervalles selon leur position. Pour chaque point $p$, on considère toutes les intervalles dont la borne gauche $a$ est inférieure ou égale à $p$. Parmi ces intervalles, il suffit de conserver celui dont la borne droite $b$ est la plus grande. En effet, si ce plus grand $b$ est inférieur à $p$, aucun des intervalles considérés ne peut contenir $p$. À l'inverse, si $\text{max}_b\geq p$, alors
 l'intervalle correspondant contient $p$. Comme les intervalles sont triés selon leur borne gauche \(a\) et que les points sont triés par ordre croissant, l'indice \(j\) avance toujours dans la même direction. Lorsqu'un intervalle est examiné pour un point \(p\), il n'est donc jamais nécessaire de le revoir pour les points suivants, puisque ceux-ci sont plus grands ou égaux à \(p\). Ainsi, chaque intervalle est examiné au plus une seule fois pendant toute l'exécution de l'algorithme. On effectue essentielement un "swipe" uniquement sur les intervalles ou les points peuvent possiblement etre.
 
 \begin{lstlisting}
