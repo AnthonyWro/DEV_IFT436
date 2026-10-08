@@ -1,0 +1,373 @@
+\documentclass[11pt]{article}
+
+\usepackage[french]{babel}
+
+\usepackage[T1]{fontenc}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage[shortlabels]{enumitem}
+
+\usepackage[margin=2cm]{geometry}
+
+\usepackage{mathtools}
+\usepackage{siunitx}
+\usepackage{physics}
+
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usetikzlibrary{quantikz2,babel}
+
+\tikzset{qcircuit/.style={
+    column sep=.9cm,
+    row sep=0.7cm,
+    operator/.style={draw=black!80, line width=0.5pt, fill=gray!5, minimum height=0.7cm, minimum width=0.7cm},
+    phase/.style={draw=black!80, fill=black!20, circle, minimum size=4pt},
+    slice/.style={font=\footnotesize\itshape, color=gray!50, dashed}
+}}
+
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+
+\makeatletter
+   \def\vhrulefill#1{\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
+\makeatother
+
+\newcommand{\moy}[1]{\langle #1 \rangle}
+\newcommand{\pDer}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pDerd}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+
+\newcounter{questioncounter}
+\newenvironment{question}[1]{
+\refstepcounter{questioncounter}
+\noindent\rule{0.05\textwidth}{1pt}\,\,\raisebox{-.3\ht\strutbox}{\textbf{Question \thequestioncounter \hspace{5mm} #1}}\,\,\vhrulefill{1pt}\par\vspace{0.4cm}
+}{\par}
+
+%======================================================
+%en-tete
+%======================================================
+\begin{document}
+\selectlanguage{french}
+\noindent{\Large Anthony Dubeau: Duba0207 } \hfill {\Large \today}\\
+{\Large Anthony Wroblewski: Wroa8915}
+
+
+\par\vspace{5mm}
+\begin{center}
+   {\Large IFT436 - Algorithmes et structures de données} \\ \vspace{5mm}
+   {\LARGE\sffamily Devoir \#2} \\ \vspace{5mm}
+\end{center}
+
+%======================================================
+%question 1
+%======================================================
+\begin{question}{Une question d’échauﬀement}
+\begin{enumerate}[label=(\alph*)]
+
+\item On démontre les deux implications.
+
+\medskip
+\noindent
+\(\Rightarrow\) Supposons que \(G\) est fortement connexe.
+Pour tout sommet \(u\in V\) et tout sommet \(v\in V\), il existe
+un chemin orienté de \(u\) à \(v\) dans \(G\). Ainsi,
+\[
+r(G,u)=V.
+\]
+Il existe également un chemin orienté de \(v\) à \(u\) dans \(G\).
+En renversant chacune de ses arêtes, on obtient un chemin orienté
+de \(u\) à \(v\) dans \(G^T\). Par conséquent,
+\[
+r(G^T,u)=V.
+\]
+Les deux égalités sont donc vérifiées pour tout \(u\in V\).
+
+\medskip
+\noindent
+\(\Leftarrow\) Supposons maintenant que, pour tout \(u\in V\),
+\[
+r(G,u)=V
+\qquad\text{et}\qquad
+r(G^T,u)=V.
+\]
+Soient \(u,v\in V\) deux sommets quelconques.
+Puisque \(v\in r(G,u)\), il existe un chemin orienté de \(u\)
+à \(v\) dans \(G\).
+De plus, puisque \(v\in r(G^T,u)\), il existe un chemin orienté
+de \(u\) à \(v\) dans \(G^T\). En renversant ses arêtes,
+on obtient un chemin orienté de \(v\) à \(u\) dans \(G\).
+
+Il existe donc un chemin orienté dans les deux sens entre
+toute paire de sommets. Ainsi, \(G\) est fortement connexe,
+ce qui complète la démonstration.
+
+\item 
+Soit \(u\in V\) un sommet tel que
+\[
+r(G,u)=r(G^T,u)=V.
+\]
+Montrons d'abord que \(G\) est fortement connexe.
+Soient \(v,w\in V\) deux sommets quelconques.
+
+Puisque \(v\in r(G^T,u)\), il existe un chemin orienté
+de \(u\) à \(v\) dans \(G^T\), donc un chemin orienté
+de \(v\) à \(u\) dans \(G\).
+De plus, puisque \(w\in r(G,u)\), il existe un chemin
+orienté de \(u\) à \(w\) dans \(G\).
+
+En passant par \(u\), on peut donc aller de \(v\) à \(w\).
+Comme \(v\) et \(w\) sont quelconques, \(G\) est fortement connexe.
+D'après le résultat de (a), on obtient alors
+\[
+\boxed{r(G,v)=r(G^T,v)=V
+\qquad\text{pour tout }v\in V.}
+\]
+\item
+On suppose que le graphe est représenté par des listes
+d'adjacence. L'algorithme est le suivant :
+\begin{enumerate}[label=\roman*]
+    \item Choisir un sommet arbitraire \(u\in V\).
+    \item Effectuer un parcours en largeur (BFS) dans \(G\)
+    à partir de \(u\). Si tous les sommets ne sont pas visités,
+    retourner \texttt{faux}.
+    \item Construire le graphe transposé \(G^T\) en renversant
+    chaque arête de \(G\).
+    \item Effectuer un BFS dans \(G^T\) à partir du même sommet
+    \(u\). Si tous les sommets sont visités, retourner
+    \texttt{vrai}; sinon, retourner \texttt{faux}.
+\end{enumerate}
+
+
+Les deux parcours permettent de déterminer respectivement
+\(r(G,u)\) et \(r(G^T,u)\). D'après (b), si ces deux ensembles
+sont égaux à \(V\), alors \(G\) est fortement connexe.
+Réciproquement, d'après (a), si \(G\) est fortement connexe,
+les deux parcours visitent tous les sommets.
+L'algorithme retourne donc \texttt{vrai} si et seulement si
+\(G\) est fortement connexe.
+
+\medskip
+\textbf{Complexité.}
+Comme vue en classe, Chaque BFS visite chaque sommet au plus une fois et examine
+chaque arête au plus une fois. Il coûte donc
+\(O(|V|+|E|)\).
+La construction de \(G^T\) consiste à créer une liste
+d'adjacence pour chaque sommet et à parcourir chaque arête
+\((v,w)\) pour ajouter l'arête \((w,v)\). Elle coûte également
+\(O(|V|+|E|)\).
+
+La complexité totale est donc
+\[
+\boxed{O(|V|+|E|)}.
+\]
+Je pense que cette complexité est optimale dans le pire cas pour une représentation par listes d'adjacence car il peut être nécessaire
+d'examiner tout les sommets et d'arêtes pour
+décider de la forte connexité.
+\item
+L'idée est de trouver la composante fortement connexe contenant
+un sommet \(u\) en effectuant deux parcours en largeur (BFS).
+
+Un BFS dans \(G\) à partir de \(u\) trouve les sommets accessibles
+depuis \(u\), soit \(r(G,u)\). Un BFS dans \(G^T\) à partir du même
+sommet trouve les sommets qui peuvent atteindre \(u\) dans \(G\),
+soit \(r(G^T,u)\). Leur intersection
+\[
+X=r(G,u)\cap r(G^T,u)
+\]
+contient donc exactement les sommets qui sont mutuellement
+accessibles avec \(u\).
+
+On enregistre cette composante, puis on recommence avec un sommet
+qui n'appartient à aucune composante déjà trouvée. Le graphe
+transposé est construit une seule fois au début.
+
+\medskip
+\textbf{Pseudo-code.}\\
+On suppose que \(\operatorname{BFS}(G,u)\) retourne l'ensemble
+des sommets visités.
+% \begin{lstlisting}
+% ComposantesFortementConnexes(G):
+
+%     construire G_transpose en renversant chaque arete de G
+%     composantes <- liste vide
+%     non_classes <- V(G)
+
+%     tant que non_classes est non vide:
+
+%         choisir u dans non_classes
+
+%         accessibles <- BFS(G, u)
+%         vers_u <- BFS(G_transpose, u)
+%         X <- intersection(accessibles, vers_u)
+
+%         ajouter X a composantes
+%         non_classes <- non_classes \ X
+
+%     retourner composantes
+% \end{lstlisting}
+
+%pas content de comment il sortait sur le pdf fac je l'ai refait avec tabbing
+
+\begin{tabbing}
+\qquad\=\qquad\=\qquad\=\kill
+\textsc{ComposantesFortementConnexes}\((G)\)\\
+\> Construire \(G^T\)\\
+\> \(\mathrm{composantes}\gets\) liste vide\\
+\> \(\mathrm{non\_classes}\gets V(G)\)\\
+\> Tant que \(\mathrm{non\_classes}\neq\varnothing\) :\\
+\>\> Choisir \(u\in\mathrm{non\_classes}\)\\
+\>\> \(X\gets\operatorname{BFS}(G,u)
+           \cap\operatorname{BFS}(G^T,u)\)\\
+\>\> \(\mathrm{composantes}.\mathrm{append}(X)\)\\
+\>\> \(\mathrm{non\_classes}\gets\mathrm{non\_classes}\setminus X\)\\
+\> Retourner \(\mathrm{composantes}\)
+\end{tabbing}
+
+Pour deux sommets \(v,w\in X\), il existe un chemin de \(v\) à \(u\) et un chemin de \(u\) à \(w\) dans \(G\).
+Tous les sommets de ces chemins sont eux aussi mutuellement accessibles avec \(u\), donc appartiennent à \(X\). On peut ainsi aller de \(v\) à \(w\) entièrement dans \(G[X]\). Par conséquent, \(G[X]\) est fortement connexe.\\
+
+De plus, si un ensemble non vide \(Z\subseteq V\setminus X\) pouvait être ajouté à \(X\) en conservant la forte connexité, chaque sommet de \(Z\) serait accessible depuis \(u\) et pourrait atteindre \(u\). Ces sommets appartiendraient donc déjà à \(X\), ce qui est une contradiction. Ainsi, \(X\) est maximal.\\
+
+Chaque itération trouve donc une composante fortement connexe complète. Comme on choisit ensuite un sommet non classé, aucune composante n'est retournée deux fois. À la fin, tous les sommets sont classés, donc toutes les composantes
+ont été trouvées.
+
+\medskip
+\textbf{Complexité.}
+Posons \(n=|V|\) et \(m=|E|\). Comme discuter en (c), avec des listes d'adjacence, la construction de \(G^T\) coûte \(O(n+m)\). Chaque itération effectue un BFS dans \(G\) et un BFS dans \(G^T\), chacun de coût \(O(n+m)\). L'intersection des deux ensembles de \(X\) et \(X^t\) des sommets visités coûte \(O(n)\) : on parcourt les \(n\) sommets et on conserve ceux qui sont marqués comme visités dans les deux tableaux.
+
+Puisque \(u\in X\), chaque itération classe au moins un nouveau sommet. Il y a donc au plus \(n\) itérations, pour une complexité totale
+\[
+\boxed{O\bigl(n(n+m)\bigr)}.
+\]
+L'algorithme est donc polynomial!
+\end{enumerate}
+    
+\end{question}
+
+
+%======================================================
+%question 2
+%======================================================
+\begin{question}{Le problème de la sous-somme}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item 
+\end{enumerate}
+\end{question}
+%======================================================
+%question 3
+%======================================================
+\begin{question}{Puissances en temps logarithmique}
+    \begin{enumerate}[label=(\alph*)]
+\item
+On donne un contre-exemple sur un graphe complet à quatre sommets.
+Les coûts des arêtes sont représentés ci-dessous.
+
+\begin{center}
+\begin{tikzpicture}[
+    sommet/.style={circle, draw, fill=white, minimum size=7mm},
+    cout/.style={fill=white, inner sep=2pt}
+]
+\node[sommet] (a) at (0,3) {$a$};
+\node[sommet] (b) at (3,3) {$b$};
+\node[sommet] (c) at (3,0) {$c$};
+\node[sommet] (d) at (0,0) {$d$};
+
+\draw (a) -- node[cout, above] {$1$} (b);
+\draw (b) -- node[cout, right] {$1$} (c);
+\draw (c) -- node[cout, below] {$10$} (d);
+\draw (d) -- node[cout, left] {$3$} (a);
+\draw (a) -- node[cout, pos=0.3] {$2$} (c);
+\draw (b) -- node[cout, pos=0.3] {$2$} (d);
+\end{tikzpicture}
+\end{center}
+
+Supposons que l'algorithme commence au sommet \(a\).
+Il choisit d'abord \(b\), car \(f(ab)=1\) est le coût minimal
+parmi les arêtes reliant \(a\) aux autres sommets.
+Depuis \(b\), il choisit ensuite \(c\), puisque
+\(f(bc)=1<f(bd)=2\).
+Il ne reste alors que \(d\), puis l'algorithme revient à \(a\).
+Le cycle retourné est donc
+\[
+C_{\mathrm{glouton}}=(a,b,c,d,a),
+\qquad
+f(C_{\mathrm{glouton}})=1+1+10+3=15.
+\]
+
+Pourtant, le cycle \(C'=(a,c,b,d,a)\) a un coût inférieur :
+\[
+f(C')=2+1+2+3=8<15.
+\]
+
+\begin{center}
+\begin{tikzpicture}[
+    sommet/.style={circle, draw, fill=white, minimum size=7mm},
+    cout/.style={fill=white, inner sep=2pt}
+]
+% Cycle glouton
+\begin{scope}
+\draw[gray!40] (0,3) -- (3,0);
+\draw[gray!40] (3,3) -- (0,0);
+
+\draw[red, very thick] (0,3) -- node[cout, above] {$1$} (3,3);
+\draw[red, very thick] (3,3) -- node[cout, right] {$1$} (3,0);
+\draw[red, very thick] (3,0) -- node[cout, below] {$10$} (0,0);
+\draw[red, very thick] (0,0) -- node[cout, left] {$3$} (0,3);
+
+\node[sommet] at (0,3) {$a$};
+\node[sommet] at (3,3) {$b$};
+\node[sommet] at (3,0) {$c$};
+\node[sommet] at (0,0) {$d$};
+\node at (1.5,-0.7) {Cycle glouton : coût \(15\)};
+\end{scope}
+
+% Cycle moins coûteux
+\begin{scope}[xshift=6cm]
+\draw[gray!40] (0,3) -- (3,3);
+\draw[gray!40] (3,0) -- (0,0);
+
+\draw[blue, very thick] (0,3)
+    -- node[cout, pos=0.3] {$2$} (3,0);
+\draw[blue, very thick] (3,0)
+    -- node[cout, right] {$1$} (3,3);
+\draw[blue, very thick] (3,3)
+    -- node[cout, pos=0.3] {$2$} (0,0);
+\draw[blue, very thick] (0,0)
+    -- node[cout, left] {$3$} (0,3);
+
+\node[sommet] at (0,3) {$a$};
+\node[sommet] at (3,3) {$b$};
+\node[sommet] at (3,0) {$c$};
+\node[sommet] at (0,0) {$d$};
+\node at (1.5,-0.7) {Autre cycle : coût \(8\)};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+L'algorithme peut donc retourner un cycle qui n'est pas
+de coût minimum. Il ne résout pas correctement le problème
+du commis voyageur : ses choix localement les moins coûteux
+ne garantissent pas un coût total minimal.
+\end{enumerate}
+\end{question}
+
+
+\bibliographystyle{apsrev4-2}
+\bibliography{references}
+\end{document}
