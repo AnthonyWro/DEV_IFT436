@@ -364,9 +364,206 @@ L'algorithme peut donc retourner un cycle qui n'est pas
 de coût minimum. Il ne résout pas correctement le problème
 du commis voyageur : ses choix localement les moins coûteux
 ne garantissent pas un coût total minimal.
+
+\item
+On utilise un algorithme "brut force" : on examine tous les cycles
+possibles et on conserve celui dont le coût est minimal.
+
+On fixe un sommet de départ \(x\in V\), puis on énumère toutes
+les permutations des \(n-1\) autres sommets. Fixer le départ
+ne fait perdre aucune solution, puisque tout cycle peut être
+écrit en commençant par \(x\).
+
+\begin{lstlisting}
+CommisVoyageur(G):
+
+    choisir x dans V(G)
+    meilleur_cycle <- null
+    cout_min <- infini
+
+    pour chaque permutation (u1, ..., u[n-1]) de V(G) \ {x}:
+
+        C <- (x, u1, ..., u[n-1], x)
+        cout <- somme des couts des aretes de C
+
+        si cout < cout_min:
+            cout_min <- cout
+            meilleur_cycle <- C
+
+    retourner meilleur_cycle
+\end{lstlisting}
+
+
+Comme le graphe est complet, chaque permutation définit un
+cycle valide passant exactement une fois par chaque sommet
+avant de revenir au point de départ.
+Tout cycle possible peut être écrit en commençant par \(x\);
+son ordre de visite figure donc parmi les permutations examinées.
+L'algorithme conserve le cycle de coût minimal parmi tous ces
+cycles et retourne ainsi une solution optimale.
+
+\medskip
+\textbf{Complexité.}
+Il y a \((n-1)!\) permutations des sommets autres que \(x\).
+Pour chacune, construire le cycle et calculer son coût
+nécessite \(O(n)\) opérations, puisqu'il contient \(n\) arêtes.
+La complexité totale est donc
+\[
+\boxed{O\bigl(n(n-1)!\bigr)=O(n!)}.
+\]
+
+\item
+On interprète ici \texttt{acmFeuilles} comme un programme qui
+retourne un arbre de coût minimal parmi les arbres couvrants
+dont les feuilles sont exactement l'ensemble demandé.
+
+Un arbre ayant exactement deux feuilles est un chemin.
+En effet, si un sommet avait un degré supérieur ou égal à \(3\), les branches issues de ce sommet conduiraient à au moins trois feuilles. Un arbre dont les seules feuilles sont \(u\) et \(v\) est donc un chemin couvrant tous les sommets, avec extrémités
+\(u\) et \(v\).
+
+Comme le graphe est complet, on peut ajouter l'arête \(uv\)
+pour fermer ce chemin et obtenir un cycle passant exactement
+une fois par chaque sommet.
+
+\begin{center}
+\begin{tikzpicture}[
+    sommet/.style={circle, draw, fill=white, minimum size=7mm}
+]
+\node[sommet] (u) at (0,0) {$u$};
+\node[sommet] (a) at (1.5,0) {$a$};
+\node[sommet] (b) at (3,0) {$b$};
+\node[sommet] (v) at (4.5,0) {$v$};
+
+\draw[thick] (u) -- (a) -- (b) -- (v);
+\draw[blue, dashed, thick]
+    (u) to[bend right=40]
+    node[below] {Arête ajoutée \(uv\)} (v);
+
+\node at (2.25,0.7) {Chemin retourné par
+\texttt{acmFeuilles}\((G,\{u,v\})\)};
+\end{tikzpicture}
+\end{center}
+
+Pour des extrémités fixées \(u,v\), le coût de fermeture
+\(f(uv)\) est constant. Minimiser le coût du chemin revient
+donc à minimiser le coût du cycle obtenu en ajoutant \(uv\).
+On teste toutes les paires d'extrémités et on conserve
+le meilleur cycle.
+
+\begin{lstlisting}
+CommisVoyageur(G):
+
+    meilleur_cycle <- null
+    cout_min <- infini
+
+    pour chaque paire de sommets distincts {u, v}:
+
+        A <- acmFeuilles(G, {u, v})
+
+        si A existe:
+            cout <- cout(A) + f(uv)
+
+            si cout < cout_min:
+                cout_min <- cout
+                meilleur_cycle <- A auquel on ajoute uv
+
+    retourner meilleur_cycle
+\end{lstlisting}
+
+
+Soit \(C^*\) un cycle optimal et soit \(uv\) une de ses arêtes.
+En retirant \(uv\), on obtient un chemin couvrant tous les sommets,
+dont les feuilles sont exactement \(u\) et \(v\).
+Le chemin \(A\) retourné par \texttt{acmFeuilles}\((G,\{u,v\})\)
+est de coût minimal sous cette contrainte. Ainsi,
+\[
+f(A)\leq f(C^*)-f(uv).
+\]
+En ajoutant l'arête \(uv\), on obtient un cycle \(C\) tel que
+\[
+f(C)=f(A)+f(uv)\leq f(C^*).
+\]
+Puisque \(C^*\) est optimal, \(C\) est lui aussi optimal.
+L'algorithme teste toutes les paires, donc il examine
+nécessairement cette possibilité et retourne un cycle optimal.
+
+\medskip
+\textbf{Complexité.}
+Il existe \(\binom{n}{2}=O(n^2)\) paires de sommets.
+Chaque paire nécessite un appel à \texttt{acmFeuilles}
+de coût \(O(g(n))\), puis un calcul de coût en \(O(n)\).
+Puisque le programme produit un arbre contenant \(n-1\) arêtes,
+son temps d'exécution est au moins linéaire; ce calcul est
+donc absorbé par \(O(g(n))\).
+La complexité totale est
+\[
+\boxed{O\bigl(n^2g(n)\bigr)}.
+\]
 \end{enumerate}
 \end{question}
+%======================================================
+%question 3
+%======================================================
+\begin{question}{Puissances en temps logarithmique}
+    \begin{enumerate}[label=(\alph*)]
+        
+\item  On note \(O=(o_1,\ldots,o_\ell)\) une solution optimale et
+\(G=(g_1,\ldots,g_k)\) la solution retournée par le glouton.
+Ici, \(o_j\) et \(g_j\) désignent les stations, ordonnées selon
+leur position sur le chemin. On utilise deux longueurs distinctes,
+car les solutions ne contiennent pas nécessairement le même
+nombre de stations. Les comparaisons
+entre stations se font selon leur position sur le chemin.
 
+Montrons par induction que, après \(j\) stations, le glouton
+a déjà atteint \(s_n\), ou bien \(g_j\geq o_j\).
+
+\textbf{Cas de base.}
+Pour \(j=1\), les deux solutions commencent à la même station :
+\[
+g_1=o_1=s_1.
+\]
+
+\textbf{Hypothèse d'induction.}
+Supposons que la propriété est vraie au rang \(j<\ell\).
+Si le glouton a déjà atteint \(s_n\), elle reste vraie.
+Sinon, on a \(g_j\geq o_j\).
+
+\textbf{Étape d'induction.}
+Si \(o_{j+1}\leq g_j\), alors
+\[
+g_{j+1}>g_j\geq o_{j+1}.
+\]
+Sinon, \(o_j\leq g_j<o_{j+1}\). Les consommations étant
+non négatives, et la solution optimale étant valide,
+\[
+\operatorname{dist}(g_j,o_{j+1})
+\leq \operatorname{dist}(o_j,o_{j+1})
+\leq r.
+\]
+Le glouton peut donc atteindre \(o_{j+1}\). Puisqu'il choisit
+la station accessible la plus éloignée,
+\[
+g_{j+1}\geq o_{j+1}.
+\]
+La propriété est donc vraie au rang \(j+1\).
+
+\textbf{Conclusion.}
+Au rang \(\ell\), la solution optimale atteint \(o_\ell=s_n\).
+Le glouton a donc atteint \(s_n\) au plus tard à ce rang,
+ce qui donne \(k\leq\ell\).
+
+La solution gloutonne est valide : chaque déplacement
+consomme au plus \(r\), et une station suivante existe toujours
+avant la destination puisque \(f(s_i,s_{i+1})\leq r\).
+Par optimalité de \(O\), on a également \(\ell\leq k\).
+Ainsi,
+\[
+\boxed{k=\ell}.
+\]
+L'algorithme \texttt{minPlein} minimise donc le nombre de stations.
+\end{enumerate}
+\end{question}
 
 \bibliographystyle{apsrev4-2}
 \bibliography{references}
