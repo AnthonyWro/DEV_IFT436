@@ -1,0 +1,149 @@
+\documentclass[11pt]{article}
+
+\usepackage[french]{babel}
+
+\usepackage[T1]{fontenc}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage[shortlabels]{enumitem}
+
+\usepackage[margin=2cm]{geometry}
+
+\usepackage{mathtools}
+\usepackage{siunitx}
+\usepackage{physics}
+
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usetikzlibrary{quantikz2,babel}
+
+\tikzset{qcircuit/.style={
+    column sep=.9cm,
+    row sep=0.7cm,
+    operator/.style={draw=black!80, line width=0.5pt, fill=gray!5, minimum height=0.7cm, minimum width=0.7cm},
+    phase/.style={draw=black!80, fill=black!20, circle, minimum size=4pt},
+    slice/.style={font=\footnotesize\itshape, color=gray!50, dashed}
+}}
+
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+
+\makeatletter
+   \def\vhrulefill#1{\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
+\makeatother
+
+\newcommand{\moy}[1]{\langle #1 \rangle}
+\newcommand{\pDer}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pDerd}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+
+\newcounter{questioncounter}
+\newenvironment{question}[1]{
+\refstepcounter{questioncounter}
+\noindent\rule{0.05\textwidth}{1pt}\,\,\raisebox{-.3\ht\strutbox}{\textbf{Question \thequestioncounter \hspace{5mm} #1}}\,\,\vhrulefill{1pt}\par\vspace{0.4cm}
+}{\par}
+
+%======================================================
+%en-tete
+%======================================================
+\begin{document}
+\selectlanguage{french}
+\noindent{\Large Anthony Dubeau: Duba0207 } \hfill {\Large \today}\\
+{\Large Anthony Wroblewski: Wroa8915}
+
+
+\par\vspace{5mm}
+\begin{center}
+   {\Large IFT436 - Algorithmes et structures de données} \\ \vspace{5mm}
+   {\LARGE\sffamily Devoir \#2} \\ \vspace{5mm}
+\end{center}
+
+%======================================================
+%question 1
+%======================================================
+\begin{question}{Retour sur Dijkstra} % j'ai l'impression d'voir un boucle de trop pour le n^3
+\begin{enumerate}[label=(\alph*)]
+    \item
+\begin{lstlisting}[mathescape=true]
+D <- {}
+pour chaque t $\in$ T 
+    visite <- {t:0}
+    dernier <- T
+    tant que dernier $\notin$ b
+        cout <- $\infty$
+        pour chaque u $\in$ visite.clees()
+            pour chaque v \in N$_g$(u)
+                cout_v = visite[u] + f(u,v)
+                si cout_v < cout
+                    cout <- cout_v
+                    dernier <- v
+                    visite[v] <- cout_v
+                fin si
+            fin pour
+        fin pour
+    fin tant que
+    D[t] = visite[dernier]
+\end{lstlisting}
+\end{enumerate}
+\end{question}
+
+
+%======================================================
+%question 2
+%======================================================
+\begin{question}{Récurrences récurrentes}
+
+\begin{enumerate}[label=(\alph*)]
+\item L'énnoncer nous fourni, $a=5, \;b=4 \; et \; c=1,08$
+    $$\Rightarrow f(n)=5f(n/4)+\mathcal{O}({n^{1,08}})$$
+    C'est le cas 1 du théorème maitre : $ \log_b{a} > c$
+    $$\log_b{a}=\log_4{5} \approx 1,16 > c =1,08$$
+    $$  \Rightarrow f(n) \in \mathcal{O}({n^{\log_4{5}}})$$
+\item Par inspection : $a=2,\;b=2, \; c=?$. On trouve aussi la récurrence suivante:
+    $$f(n)=2f(n/2)+2(\mathcal{O}(n)+\mathcal{O}(n\log(n)))$$
+    $$f(n)=2f(n/2)+\mathcal{O}(n\log(n))$$
+    $$ \Rightarrow c=1\;et\;k=1$$
+    Application du théorème maitre : $\log_a{b}=\log_2{2}=1=c$\vspace{5mm}\\
+    C'est le cas 2 du théorème maitre : $k = k+1$
+    $$\Rightarrow f(n) \in \mathcal{O}(n\log^{2}{n})$$
+\item %pas les technique encore pour faire l'analyse d'un algo diviser avec n-1
+     
+\end{enumerate}
+\end{question}
+
+
+%======================================================
+%question 3
+%======================================================
+\begin{question}{Divisez et régnez}
+    \begin{enumerate}[label=(\alph*)]
+\item  
+\end{enumerate}
+\end{question}
+
+%======================================================
+%question 4
+%======================================================
+\begin{question}{La gestion de conflits de bar}
+    \begin{enumerate}[label=(\alph*)]
+\item  
+\end{enumerate}
+\end{question}
+
+\bibliographystyle{apsrev4-2}
+\bibliography{references}
+\end{document}
