@@ -86,7 +86,7 @@ pour chaque t $\in$ T
     tant que dernier $\notin$ b
         cout <- $\infty$
         pour chaque u $\in$ visite.clees()
-            pour chaque v \in N$_g$(u)
+            pour chaque v $\in$ N$_g$(u)
                 cout_v = visite[u] + f(u,v)
                 si cout_v < cout
                     cout <- cout_v
@@ -130,8 +130,20 @@ pour chaque t $\in$ T
 %question 3
 %======================================================
 \begin{question}{Divisez et régnez}
-    \begin{enumerate}[label=(\alph*)]
-\item  
+\begin{enumerate}[label=(\alph*)]
+\item  On veut multiplier deux nombre x et y qui contiennent chaqun $n=2^k \;avec\; k\in \mathbb{Z}$ chiffres. Le premier x est constitué de n chiffres différents et y est une répétition du même chiffre. 
+
+La méthode est de couper les chaines de caractère de chaque nombre et utilisé les puissance de 10 pour placé les 2 parties. $$x = abcdefgh = abcd*10^{n/2} + efgh \;et \; y = kkkkkkkk = kkkk*10^{n/2} + kkkk$$ On peut définir $abcd = x_1,\; efgh = x_2 \; et \; kkkk = y_1 = y_2$. 
+
+En multipliant x et y, on obtient : $$x * y = 10^n*x_1y_1+10^{n/2}x_1y_1+10^{n/2}x_2y_1+x_2y_1$$ 
+On remarque qu'il y a maintenant $a=2$ multiplications semblables à celle de départ, mais avec des nombres contenant $n/2$ chiffres. Le temps requis pour recombiner est $\mathcal{O}(n)$, car c'est seulement des additions et des multiplications de puissance de 10. On obtient donc la récurrence suivante: 
+$$f(n) = 2 f(n/2)+\mathcal{O}(n)$$
+
+En utilisant le théorème maitre avec $a=2$, $b=2$ et $c=1$, on trouve $\log_2{2}=1=c$. On se trouve donc dans le cas 2 du théorème. On incrémente la puissance inexistante de $\log n$ pour obtenir la complexité de l'algorithme:
+$$\mathcal{O}(n \log n)$$
+
+\item
+
 \end{enumerate}
 \end{question}
 
