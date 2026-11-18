@@ -76,29 +76,72 @@
 %question 1
 %======================================================
 \begin{question}{Retour sur Dijkstra} % j'ai l'impression d'voir un boucle de trop pour le n^3
-\begin{enumerate}[label=(\alph*)]
-    \item
-\begin{lstlisting}[mathescape=true]
-D <- {}
-pour chaque t $\in$ T 
-    visite <- {t:0}
-    dernier <- T
-    tant que dernier $\notin$ b
-        cout <- $\infty$
-        pour chaque u $\in$ visite.clees()
-            pour chaque v \in N$_g$(u)
-                cout_v = visite[u] + f(u,v)
-                si cout_v < cout
-                    cout <- cout_v
-                    dernier <- v
-                    visite[v] <- cout_v
-                fin si
-            fin pour
-        fin pour
-    fin tant que
-    D[t] = visite[dernier]
+
+%oui, l'idee est la, mais ta comme mal refait dijkstra. chaque étape, tu reparcours tous les sommets visiter et tous leurs voisins pour trouver le prochain sommet. Ca coute jusqu’a O(n^2) par étape. ce qui coute O(n^3) par electeur x n electeur = O(n^4)
+
+%normalement, dijkstra conserve un tableau "distance" contenant les meilleures distances connues, y compris pour les sommets non encore traiter. a chaque step il  1 : sélectionne le sommet non traité de plus petite distance O(n). 2: Il met a jour uniquement les distances des voisins de ce sommet. O(1)
+
+
+%tu pourrai pt faire un dikstra sur chaque electeur en (n^2) en initialisant la distance des electeur a 0 et en arretant la recherche quand un des bureau de vote est trouver comme sommet de distance minimale. vue quil y a au plus (n) électeurs, ca ferait (n^3). 
+
+% \begin{enumerate}[label=(\alph*)]
+%     \item
+% \begin{lstlisting}[mathescape=true]
+% D <- {}
+% pour chaque t $\in$ T 
+%     visite <- {t:0}
+%     dernier <- T
+%     tant que dernier $\notin$ b
+%         cout <- $\infty$
+%         pour chaque u $\in$ visite.clees()
+%             pour chaque v \in N$_g$(u)
+%                 cout_v = visite[u] + f(u,v)
+%                 si cout_v < cout
+%                     cout <- cout_v
+%                     dernier <- v
+%                     visite[v] <- cout_v
+%                 fin si
+%             fin pour
+%         fin pour
+%     fin tant que
+%     D[t] = visite[dernier]
+% \end{lstlisting}
+% \end{enumerate}
+
+
+L'idée est d'utiliser l'algorithme de Dijkstra avec plusieurs sommets de départ : les bureaux de vote. On initialise leur distance à zéro et celle des autres sommets à l'infini. À chaque étape, on sélectionne le sommet non traité ayant la plus petite distance, puis on met à jour les distances de ses voisins. Puisque les poids sont non négatifs et que le graphe est non orienté, on obtient ainsi la distance minimale de chaque électeur à un bureau de vote.\\
+
+On peut le voir comme ajouter un sommet de depart fictif relier a chaque bureaux par un distance 0, par principe glouton on choisira tout les bureaux en premiers, puis on choisira les electeurs par distance minimal. Puisque le sommet fictif est a une distance 0 des bureaux, la distance minimal des electeurs a ce sommet et la meme que la distance minimal des electeurs a un bureau.   
+
+
+\begin{lstlisting}[mathescape=true, literate={à}{{\`a}}1]
+fonction distance_bureaux(G = (V,E,f), B, T)
+    // On suppose que V = {1,...,n}
+    traites <- $\emptyset$
+    restants <- V
+    d[v] <- 0 si v $\in B$, sinon $\infty$, pour tout v $\in V$
+
+    tant que restants est non-vide faire
+        v <- sommet de restants qui minimise d[v]
+        Ajouter v à traites
+        Enlever v de restants
+
+        pour chaque voisin w de v faire
+            si w $\notin$ traites alors
+                d[w] <- min(d[w], d[v] + f(v,w))
+            fin
+        fin
+    fin
+
+    retourner D <- {t : d[t] pour t $\in T$}
+fin
 \end{lstlisting}
-\end{enumerate}
+
+Les poids étant non négatifs, Dijkstra garantit
+$D[t]=\min_{b\in B}\operatorname{dist}(t,b)$.
+La boucle principale effectue au plus $n$ itérations. À chaque itération, la recherche du sommet de distance minimale coûte $O(n)$, soit $O(n^2)$ au total. Chaque arête est examinée au plus
+deux fois lors du parcours des voisins, ce qui ajoute $O(|E|)$, en supposant que l'appartenance à $\mathrm{traites}$ se vérifie en temps constant. La complexité est donc $O(n^2+|E|)=O(n^2)$ pour un graphe simple. 
+
 \end{question}
 
 
@@ -109,18 +152,50 @@ pour chaque t $\in$ T
 
 \begin{enumerate}[label=(\alph*)]
 \item L'énnoncer nous fourni, $a=5, \;b=4 \; et \; c=1,08$
+
     $$\Rightarrow f(n)=5f(n/4)+\mathcal{O}({n^{1,08}})$$
+
     C'est le cas 1 du théorème maitre : $ \log_b{a} > c$
     $$\log_b{a}=\log_4{5} \approx 1,16 > c =1,08$$
+
     $$  \Rightarrow f(n) \in \mathcal{O}({n^{\log_4{5}}})$$
+
+
 \item Par inspection : $a=2,\;b=2, \; c=?$. On trouve aussi la récurrence suivante:
+
     $$f(n)=2f(n/2)+2(\mathcal{O}(n)+\mathcal{O}(n\log(n)))$$
     $$f(n)=2f(n/2)+\mathcal{O}(n\log(n))$$
     $$ \Rightarrow c=1\;et\;k=1$$
+
     Application du théorème maitre : $\log_a{b}=\log_2{2}=1=c$\vspace{5mm}\\
+    
     C'est le cas 2 du théorème maitre : $k = k+1$
+
     $$\Rightarrow f(n) \in \mathcal{O}(n\log^{2}{n})$$
-\item %pas les technique encore pour faire l'analyse d'un algo diviser avec n-1
+
+\item Chaque appel effectue trois appels récursifs sur un tableau de$n-1$ triplets. En supposant que la création de $T'$ prend un temps constant, on obtient
+\[
+f(n)=3f(n-1)+O(1), \qquad f(0)=O(1).
+\]
+
+on pose $f(n) = r^n$,
+
+\[r^n = 3r^{n-1}\]
+
+on divise par $r^{n-1}$ de chaque coter,
+\[
+r = 3,
+\] 
+
+\[
+f(n) = 3(3^n) = (3^{n+1})
+\]
+
+Chaque appel effectue un travail constant en dehors des appels
+récursifs. Ainsi, la complexité de l'algorithme est
+\[
+\boxed{f(n)\in O(3^n).}
+\]
      
 \end{enumerate}
 \end{question}
@@ -131,7 +206,130 @@ pour chaque t $\in$ T
 %======================================================
 \begin{question}{Divisez et régnez}
     \begin{enumerate}[label=(\alph*)]
-\item  
+        
+\item  Puisque les deux moitiés de $x$ sont identiques, on écrit
+
+\[
+x = 10^{n/2}x_1 + x_1,
+\qquad
+y = 10^{n/2}y_1 + y_2.
+\]
+
+En développant, on obtient
+
+\[
+xy = 10^n x_1y_1 + 10^{n/2}(x_1y_1+x_1y_2) + x_1y_2.
+\]
+
+Il suffit donc de calculer récursivement les deux produits
+$x_1y_1$ et $x_1y_2$, chacun portant sur des entiers de $n/2$
+chiffres. Les additions et les décalages décimaux coûtent $O(n)$.
+Ainsi,
+
+\[
+T(n)=2T(n/2)+O(n), \qquad T(1)=O(1).
+\]
+
+On a $a=2$, $b=2$ et $c=1$. Puisque $\log_b a=1=c$,
+le deuxième cas du théorème maître donne
+
+\[
+\boxed{T(n)=O(n\log n).}
+\]
+
+
+
+\item L'idée est de diviser le tableau en deux moitiés et de résoudre récursivement le problème pour chacune. Chaque appel retourne les
+indices de début et de fin de sa plus longue séquence, ainsi que les longueurs de son préfixe et de son suffixe uniformes. Ces derniers correspondent aux séquences de valeurs identiques
+situées au début et à la fin du sous-tableau gauche et droite.
+
+Pour combiner les résultats, on compare les meilleures séquences des deux moitiés avec celle qui pourrait traverser le milieu. Si $T[m]=T[m+1]$, où $m$ est l'indice séparant les deux moitiés,
+cette séquence a pour longueur
+
+\[
+\ell_{\mathrm{milieu}}
+= \ell_{\mathrm{suffixe\ gauche}}
++ \ell_{\mathrm{préfixe\ droit}}.
+\]
+
+Sinon, aucune séquence uniforme ne traverse le milieu. On conserve les indices de la plus longue des séquences candidates.On met également à jour le préfixe et le suffixe du sous-tableau. Lorsque $T[m]=T[m+1]$, le préfixe peut être prolongé par celui de droite si toute la moitié gauche est uniforme. De même, le suffixe peut être prolongé par celui de gauche si toute la moitié droite est uniforme. Sinon, on conserve respectivement le préfixe gauche et le suffixe droit. Pour un sous-tableau d'un seul élément, les deux indices sont ceux de cet élément et les deux longueurs valent $1$. Pour un sous-tableau vide, les indices sont nuls et les longueurs
+valent $0$.\\
+
+
+% \begin{lstlisting}
+% fonction getMaxConsec(T, debut, fin)
+%     n <- fin - debut + 1
+%     si n = 0 alors retourner (0, 0, 0)
+%     si n = 1 alors retourner (1, 1, 1)
+
+%     milieu <- plancher((debut + fin) / 2)
+%     gauche <- getMaxConsec(T, debut, milieu)
+%     droite <- getMaxConsec(T, milieu + 1, fin)
+
+%     maximum <- max(gauche.maximum, droite.maximum)
+%     prefixe <- gauche.prefixe
+%     suffixe <- droite.suffixe
+
+%     si T[milieu] = T[milieu + 1] alors
+%         maximum <- max(maximum, gauche.suffixe + droite.prefixe)
+
+%         si gauche.prefixe = milieu - debut + 1 alors
+%             prefixe <- gauche.prefixe + droite.prefixe
+%         fin
+
+%         si droite.suffixe = fin - milieu alors
+%             suffixe <- droite.suffixe + gauche.suffixe
+%         fin
+%     fin
+
+%     retourner (maximum, prefixe, suffixe)
+% fin
+%     \end{lstlisting}
+La combinaison nécessite un nombre constant d'opérations.
+Puisqu'aucun sous-tableau n'est copié, la récurrence est
+\[
+C(n)=2C(n/2)+O(1).
+\]
+Le théorème maître donne donc une complexité de $O(n)$.
+La longueur recherchée est finalement $j-i+1$, où $(i,j)$
+sont les indices de la meilleure séquence retournée.\\
+
+
+
+
+
+\item On trie (trifusion) les personnes par nombre d'heures croissant en conservant leur indice original. On parcourt ensuite le tableau en gardant le salaire maximal des personnes ayant travaillé strictement moins d'heures. Si ce maximum dépasse strictement le salaire courant, la personne est injustement traitée et son indice est ajouté à la sortie. Les personnes ayant le même nombre d'heures sont évaluées ensemble,
+avant de mettre à jour le maximum, pour ne pas les comparer entre elles.
+
+\begin{lstlisting}[mathescape=true]
+fonction injustices(P)
+    Q <- indices de P tries par P[indice].heures croissant
+    I <- []
+    salaire_max <- $-\infty$
+
+    pour chaque groupe G d'indices consecutifs de Q
+        ayant le meme nombre d'heures faire
+        pour chaque i dans G faire
+            si P[i].salaire < salaire_max alors
+                I.append(i)
+            fin
+        fin
+        salaire_max <- max(salaire_max,
+                           max des P[i].salaire pour i dans G)
+    fin
+
+    retourner I
+fin
+\end{lstlisting}
+
+Avant chaque groupe, \texttt{salaire\_max} est le salaire maximal parmi
+les personnes ayant travaillé strictement moins d'heures. Ainsi,
+$P[i].\mathrm{salaire}<\texttt{salaire\_max}$ si et seulement s'il existe
+une personne ayant travaillé moins d'heures et reçu un salaire supérieur.
+L'algorithme retourne donc exactement les indices recherchés.
+Le tri fusion coûte $O(n\log n)$ et le parcours des groupes coûte $O(n)$,
+car chaque personne est examinée un nombre constant de fois.
+La complexité totale est donc $\boxed{O(n\log n)}$.
 \end{enumerate}
 \end{question}
 
