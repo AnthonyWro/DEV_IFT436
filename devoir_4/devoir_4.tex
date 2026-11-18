@@ -339,6 +339,82 @@ La complexité totale est donc $\boxed{O(n\log n)}$.
 \begin{question}{La gestion de conflits de bar}
     \begin{enumerate}[label=(\alph*)]
 \item  
+Chaque appel non terminal effectue deux appels récursifs sur un graphe ayant un sommet de moins. Pour compter les nœuds de l'arbre de récursion, on considère donc la récurrence ou on suppose pour l'instant chaque appel constant.
+\[
+f(n)\leq 2f(n-1)+O(1).
+\]
+Pour résoudre On pose $f(n)=r^n$ :
+
+\[
+r^n=2r^{n-1}.
+\]
+
+En divisant par $r^{n-1}$, on obtient $r=2$.
+La solution est donc $f(n)=2\times2^n$.
+
+Avec $N(0)=1$ on obtient,
+
+\[
+f(n)= 2^{n+1}\in O(2^n).
+\]
+
+Les branches qui se terminent plus tôt ne font que réduirele nombre de nœuds.
+
+Le travail effectué à chaque nœud comprend le choix d'une arête, la construction des graphes privés de $u$ ou de $v$, la mise à jour des ensembles de clients exclus et la comparaison des solutions. Ces opérations prennent un temps polynomial $O(n^c)$, où $c$ est une constante qui dépend des structures de données utilisées. Par exemple, supprimer un sommet nécessite aussi de supprimer
+ses arêtes incidentes, dont le nombre peut atteindre $n-1$.
+
+En multipliant le nombre maximal de nœuds par le coût maximal du travail effectué à chaque nœud, on obtient
+
+\[
+\boxed{f(n)\in O(2^n)\cdot O(n^c)=O(2^n n^c).}
+\]
+\item On applique d'abord les deux premières règles sans créer de branchement. Un sommet isolé est retiré du graphe sans être ajouté
+à $C$. Si un sommet $u$ possède un seul voisin $v$, on ajoute $v$ à $C$ et on retire $u$ et $v$ du graphe : $u$ peut alors être gardé sans conflit.\\
+
+Si le graphe restant est vide, on retourne $C$. Sinon, tous ses sommets ont un degré au moins égal à deux. On choisit un sommet $u$
+et on considère deux possibilités :
+
+\begin{itemize}
+    \item Exclure $u$ : on ajoute $u$ à $C$ et on poursuit sur $G-u$, qui possède $n-1$ sommets.
+    
+    \item Garder $u$ : on ajoute tous ses voisins $N(u)$ à $C$ et on poursuit sur $G-(\{u\}\cup N(u))$. Comme $u$ possède au moins deux voisins, cette instance
+    contient au plus $n-3$ sommets.
+\end{itemize}
+
+On retourne la solution qui exclut le moins de personnes. Ces deux cas couvrent toutes les possibilités : une solution exclut $u$, ou doit exclure tous ses voisins.
+
+Le nombre de feuilles de l'arbre de récursion est donc majoré par une récurrence de la forme
+
+\[
+f(n)\leq f(n-1)+f(n-3).
+\]
+
+
+En cherchant une solution exponentielle $f(n)=r^n$ à la récurrence avec égalité, on obtient
+
+\[
+r^n=r^{n-1}+r^{n-3}.
+\]
+
+En divisant par $r^{n-3}$,
+
+\[
+r^3=r^2+1.
+\]
+
+La racine réelle positive de cette équation est
+\[
+a\approx 1{,}46557<2.
+\]
+Ainsi, le nombre de feuilles, et donc le nombre de nœuds de branchement, est en $O(a^n)$.
+
+Les réductions et les opérations sur les graphes et les ensembles prennent un temps polynomial $O(n^c)$ par nœud de branchement,
+pour une constante $c$ dépendant des structures de données. La complexité totale est donc
+
+\[
+\boxed{O(a^n n^c),\qquad a\approx 1{,}46557<2.}
+\]
+
 \end{enumerate}
 \end{question}
 
